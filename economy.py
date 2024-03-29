@@ -19,6 +19,7 @@ class Economy:
     def add_citizen(self, citizen):
         # Adds a specific citizen to the economy, adjusting demand accordingly
         self.citizens.append(citizen)
+        self.add_demand()
         # Hmmmmmm, this might be problematic later...
         # self.adjust_demand()
 
@@ -33,6 +34,12 @@ class Economy:
             self.demand_weights[good] = np.random.default_rng().normal(1, 0.10, 1)[0]
             self.goods_demanded[good] = 0
             self.goods_supplied[good] = 0
+
+    def add_demand(self):
+        # This adds a consumer to already existing demand structure
+        pop = len(self.citizens)
+        for good in self.goods_demanded.keys():
+            self.goods_demanded[good]*= ((pop+1)/pop)
 
     def adjust_demand(self):
         # Adjusts demand based on population from base values
