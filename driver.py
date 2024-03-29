@@ -18,7 +18,7 @@ def main():
 
     year = 0
 
-    while year > 50:
+    while year < 50:
         eco.pass_year()
         year += 1
 
