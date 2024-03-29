@@ -96,7 +96,7 @@ class Economy:
 
         # Produces goods and sends report
         self.production_cycle()
-        self.report(age=True, workforce=True)
+        # self.report(age=True, workforce=True)
 
         # Population consumes goods, zeroing supply
         self.consume_goods()
@@ -109,7 +109,6 @@ class Economy:
         if age:
             ages = [citizen.age for citizen in self.citizens]
             avg = sum(ages)/len(ages)
-
             print(f'Average Citizen age {avg:.2f}')
 
         if workforce:
