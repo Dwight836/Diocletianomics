@@ -29,13 +29,19 @@ class Citizen:
         # Should I give them bank accounts? Not right now...
         retirement_age = 60
         self.age += 1
+        self.join_workforce()
         self.retire(retirement_age=retirement_age)
         self.death()
+
+    def join_workforce(self):
+        # Allows shifting of the workforce
+        if self.age >= 18:
+            self.workforce = True
 
     def reproduce(self):
         # Do something to make sure that dead / underage citizens can't reproduce
         # // This should probably be a binomial Gaussian for age...
-        birth_rate = 0.10 * self.alive * (self.age >= 18) * (self.age <= 50)
+        birth_rate = 0.08 * self.alive * (self.age >= 18) * (self.age <= 50)
         kids = rnd.choices([True, False], weights=[birth_rate, 1 - birth_rate], k=1)[0]
         return kids
 
