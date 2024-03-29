@@ -92,7 +92,8 @@ class Economy:
             citizen.pass_year()
 
             if citizen.reproduce():
-                self.citizens.append(Citizen(set_age=0))
+                baby = Citizen(set_age=0)
+                self.citizens.append(baby)
 
         # Adjusts citizen list
         self.get_citizens()
@@ -103,7 +104,7 @@ class Economy:
 
         # Produces goods and sends report
         self.production_cycle()
-        # self.report(age=True, workforce=True)
+        self.report(age=True)
 
         # Population consumes goods, zeroing supply
         self.consume_goods()
