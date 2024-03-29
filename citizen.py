@@ -7,15 +7,17 @@ class Citizen:
 
     def __init__(self, set_age=None):
 
-        self.age = np.random.default_rng().normal(30, 10, 1)[0]
+        if set_age is not None:
+            self.age = set_age
+        else:
+            self.age = np.random.default_rng().normal(30, 10, 1)[0]
+
+        #self.age = rnd.uniform(0, 70)
         self.productivity = np.random.default_rng().normal(1, 0.25, 1)[0]
         self.workforce = self.age >= 18
         self.alive = True
         self.job = None
         self.id = Citizen.citizen_id
-
-        if set_age:
-            self.age = set_age
 
         Citizen.citizen_id += 1
 
