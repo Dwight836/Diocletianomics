@@ -11,6 +11,9 @@ class Firm:
         self.firm_id = Firm.firm_id
         Firm.firm_id += 1
 
+    def __repr__(self):
+        return f'{self.good} firm, employing {len(self.workers)} workers'
+
     def produce(self):
 
         # if a firm is IN an economy
@@ -23,6 +26,7 @@ class Firm:
 
     def hire_worker(self, worker):
         # Worker is a citizen object
+
         self.workers.append(worker)
         worker.job = self.good
 
@@ -44,3 +48,8 @@ class Firm:
 # There needs to be a way to hire all the citizens in an economy
 # Should they be randomly assigned to firm ids? Or competitive labor market...?
 # I think I will be randomly assigning them...
+
+# Costs and their implications. Firm specific?
+# labor costs should be wage... maybe cost of materials and labor?
+# materials should be determined through the good...
+# material price should be specific to the economy (later the market...)
