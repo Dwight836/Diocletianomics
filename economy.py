@@ -35,7 +35,6 @@ class Economy:
             self.goods_demanded[good] = 0
             self.goods_supplied[good] = 0
 
-
     def add_demand(self):
         # This adds a consumer to already existing demand structure
         pop = len(self.citizens)
@@ -65,7 +64,8 @@ class Economy:
         choices = rnd.choices(firm_ids, weights=weights, k=len(self.workforce))
 
         for worker, choice in zip(self.workforce, choices):
-            self.firms[choice].hire_worker(worker)
+            if worker.job is None:
+                self.firms[choice].hire_worker(worker)
 
     def introduce_workers(self):
         self.get_workforce()
@@ -86,7 +86,7 @@ class Economy:
         for good in self.goods_supplied.keys():
             self.goods_supplied[good] = 0
 
-    def pass_year(self):
+    def pass_year(self, report=False):
         # Passes a year for every citizen
         for citizen in self.citizens:
             citizen.pass_year()
@@ -101,10 +101,13 @@ class Economy:
         # Adjusts demand and workforce based on population
         self.adjust_demand()
         self.get_workforce()
+        self.employ_workers()
 
         # Produces goods and sends report
         self.production_cycle()
-        self.report(age=True, workforce=True)
+
+        if report:
+            self.report(age=True, workforce=True, good='pottery')
 
         # Population consumes goods, zeroing supply
         self.consume_goods()
@@ -112,7 +115,7 @@ class Economy:
     def report(self, good=None, age=None, workforce=None):
 
         if good:
-            print(f'{self.goods_supplied[good]:.2f} units of {g}')
+            print(f'{self.goods_supplied[good]:.2f} units of {good}')
 
         if age:
             ages = [citizen.age for citizen in self.citizens]
