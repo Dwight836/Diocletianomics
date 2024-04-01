@@ -1,6 +1,6 @@
-from citizen import Citizen
+# from citizen import Citizen
 from economy import Economy
-from firm import Firm
+# from firm import Firm
 
 
 def main():
@@ -19,8 +19,11 @@ def main():
     year = 0
 
     while year < 50:
-        eco.pass_year()
+        eco.pass_year(report=True)
         year += 1
+
+    for firm in eco.firms:
+        print(firm)
 
     # I should make mu and sigma for rng class attributes instead of repeating them once again.
     # Perhaps the demand weights?
