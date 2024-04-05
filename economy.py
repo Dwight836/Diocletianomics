@@ -12,6 +12,9 @@ class Economy:
         self.demand_weights = dict()
         self.goods_demanded = dict()
         self.goods_supplied = dict()
+
+        #self.good
+
         self.citizens = []
         self.firms = []
         self.workforce = []
@@ -34,6 +37,13 @@ class Economy:
             self.demand_weights[good] = np.random.default_rng().normal(1, 0.10, 1)[0]
             self.goods_demanded[good] = 0
             self.goods_supplied[good] = 0
+
+    def introduce_good(self, good):
+        # this has the option of adding a good (silk?) to the economy)
+
+
+        pass
+
 
     def add_demand(self):
         # This adds a consumer to already existing demand structure

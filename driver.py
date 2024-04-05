@@ -19,7 +19,7 @@ def main():
     year = 0
 
     while year < 50:
-        eco.pass_year(report=True)
+        eco.pass_year()
         year += 1
 
     for firm in eco.firms:
@@ -28,5 +28,6 @@ def main():
     # I should make mu and sigma for rng class attributes instead of repeating them once again.
     # Perhaps the demand weights?
 
+    print(eco.citizens[1])
 
 main()

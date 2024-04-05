@@ -22,12 +22,18 @@ class Citizen:
         self.alive = True
         self.job = None
         self.id = Citizen.citizen_id
+
+        # I am going to make a rudimentary bank account system.
+        # Or something that functions as such...
+        # Interest on earnings is another matter. But INTEREST Optional...
+        # Massive can of worms
         self.wage = 0
+        self.balance = 0
 
         Citizen.citizen_id += 1
 
     def __repr__(self):
-        return f'Citizen #{self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, '
+        return f'Citizen #{self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
 
     def pass_year(self):
         # This passes one year for a citizen
@@ -56,18 +62,17 @@ class Citizen:
             self.productivity = 0
 
     def death(self):
-        # This is a formula for calculating death chance. Not good...
-        #death_rate = (self.age - 40) / 300
-        #death_chance = rnd.uniform(0, 1)
-        #self.alive = death_chance > death_rate
+        # death_rate = (self.age - 20) / 2000
+        # self.alive = rnd.uniform(0, 1) > death_rate
 
+        # I do not want to work out a death formula right now.
         self.alive = self.age < 75
 
     def educate(self):
         # Multiple levels of education
         if self.age > 18:
-            self.job = 'student'
-        self.productivity += 0.01
+            #self.job = 'student'
+            self.productivity += 0.01
 
 
 

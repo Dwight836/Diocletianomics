@@ -15,7 +15,6 @@ class Firm:
         return f'{self.good} firm, employing {len(self.workers)} workers'
 
     def produce(self):
-
         # if a firm is IN an economy
         if self.eco:
             prod = sum([worker.productivity for worker in self.workers])
