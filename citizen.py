@@ -41,6 +41,8 @@ class Citizen:
         self.age += 1
         self.educate()
         self.join_workforce()
+
+        # Retirement age should be another thing. Perhaps on the economy-wide scale?
         self.retire(retirement_age=60)
         self.death()
 
