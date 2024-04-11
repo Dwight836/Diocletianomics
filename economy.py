@@ -9,11 +9,8 @@ class Economy:
 
     def __init__(self):
 
-        self.demand_weights = dict()
-        self.goods_demanded = dict()
-        self.goods_supplied = dict()
-
-        #self.good
+        self.goods = dict()
+        self.connectivity = 1
 
         self.citizens = []
         self.firms = []
@@ -32,32 +29,27 @@ class Economy:
     def introduce_goods(self, goods_list):
         # Introduces goods to the economy, initializing supply at 0
         for good in goods_list:
-
-            # If something is to be modified, let's start here
-            self.demand_weights[good] = np.random.default_rng().normal(1, 0.10, 1)[0]
-            self.goods_demanded[good] = 0
-            self.goods_supplied[good] = 0
+            self.introduce_good(good)
 
     def introduce_good(self, good):
         # this has the option of adding a good (silk?) to the economy)
-
-
-        pass
-
+        self.goods[good] = {'quantity_demanded': 0,
+                            'quantity_supplied': 0,
+                            'demand_weight': np.random.default_rng().normal(1, 0.10, 1)[0] * self.connectivity,
+                            'cost_weight': np.random.default_rng().normal(1, 0.10, 1)[0]}
 
     def add_demand(self):
         # This adds a consumer to already existing demand structure
         pop = len(self.citizens)
-        for good in self.goods_demanded.keys():
-            # Increases demand based off the addition of one citizen
-            self.goods_demanded[good] *= ((pop+1)/pop)
+        for good in self.goods.keys():
+            self.goods[good]['quantity_demanded'] *= ((pop+1)/pop)
 
     def adjust_demand(self):
         # Adjusts demand based on population from base values
         population = len(self.citizens)
-        for good, quantity_demanded in self.goods_demanded.items():
-            self.goods_demanded[good] = self.demand_weights[good] * population
-            self.demand_weights[good] = np.random.default_rng().normal(1, 0.05, 1)[0]
+        for good in self.goods.keys():
+            self.goods[good]['quantity_demanded'] = self.goods[good]['demand_weight'] * population
+            self.goods[good]['demand_weight'] = np.random.default_rng().normal(1, 0.05, 1)[0]
 
     def get_workforce(self):
         # Updates the workforce of the economy
@@ -82,9 +74,12 @@ class Economy:
         self.employ_workers()
 
     def introduce_firms(self):
-        for good in self.goods_demanded.keys():
-            f = Firm(good=good, eco=self)
-            self.firms.append(f)
+        for good in self.goods.keys():
+            self.introduce_firm(good)
+
+    def introduce_firm(self, good):
+        f = Firm(good=good, eco=self)
+        self.firms.append(f)
 
     def production_cycle(self):
         # Runs the production cycle for each firm
@@ -93,8 +88,8 @@ class Economy:
 
     def consume_goods(self):
         # Resets supplies
-        for good in self.goods_supplied.keys():
-            self.goods_supplied[good] = 0
+        for good in self.goods.keys():
+            self.goods[good]['quantity_supplied'] = 0
 
     def pass_year(self, report=False):
         # Passes a year for every citizen
@@ -117,7 +112,7 @@ class Economy:
         self.production_cycle()
 
         if report:
-            self.report(age=True, workforce=True, good='pottery')
+            self.report(age=True, workforce=True, good='silk')
 
         # Population consumes goods, zeroing supply
         self.consume_goods()

@@ -20,8 +20,8 @@ class Firm:
             prod = sum([worker.productivity for worker in self.workers])
 
             # if firm produces a good that is demanded by the economy
-            if self.good in self.eco.goods_demanded.keys():
-                self.eco.goods_supplied[self.good] += prod
+            if self.good in self.eco.goods.keys():
+                self.eco.goods[self.good]['quantity_supplied'] += prod
 
     def hire_worker(self, worker):
         # Worker is a citizen object
