@@ -18,16 +18,18 @@ def main():
 
     year = 0
 
-    while year < 50:
+    while year < 10:
         eco.pass_year()
         year += 1
+
+    eco.introduce_good('silk')
+    print(eco.goods['silk'])
+
+    eco.pass_year()
+    print(eco.goods['silk'])
 
     for firm in eco.firms:
         print(firm)
 
-    # I should make mu and sigma for rng class attributes instead of repeating them once again.
-    # Perhaps the demand weights?
-
-    print(eco.citizens[1])
 
 main()
