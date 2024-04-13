@@ -25,30 +25,22 @@ class Firm:
 
     def hire_worker(self, worker):
         # Worker is a citizen object
-
         self.workers.append(worker)
         worker.job = self.good
 
-    def set_price(self):
-        # Adds market price (since these firms are currently monopolies
-        # How does this happen?
-        pass
-
     def set_wage(self):
-        # Sets a wage for every worker at that factory (I will make it 1)
+        # Sets a wage for each worker
         for worker in self.workers:
-            wage = 1
+            wage = worker.productivity
             worker.wage = wage
 
     def pay_wage(self):
-        # Should this even be a function?
+        # Pays wages
+        for worker in self.workers:
+            worker.balance += worker.wage
+
+    def set_price(self):
+        # Adds market price...
         pass
 
-# There needs to be a way to hire all the citizens in an economy
-# Should they be randomly assigned to firm ids? Or competitive labor market...?
-# I think I will be randomly assigning them...
 
-# Costs and their implications. Firm specific?
-# labor costs should be wage... maybe cost of materials and labor?
-# materials should be determined through the good...
-# material price should be specific to the economy (later the market...)
