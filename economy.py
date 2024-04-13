@@ -11,7 +11,6 @@ class Economy:
 
         self.goods = dict()
         self.connectivity = 1
-
         self.citizens = []
         self.firms = []
         self.workforce = []
@@ -36,7 +35,7 @@ class Economy:
         self.goods[good] = {'quantity_demanded': 0,
                             'quantity_supplied': 0,
                             'demand_weight': np.random.default_rng().normal(1, 0.10, 1)[0] * self.connectivity,
-                            'cost_weight': np.random.default_rng().normal(1, 0.10, 1)[0]}
+                            'cost_weight': (np.random.default_rng().normal(1, 0.10, 1)[0]) / self.connectivity}
 
     def add_demand(self):
         # This adds a consumer to already existing demand structure
@@ -92,6 +91,9 @@ class Economy:
             self.goods[good]['quantity_supplied'] = 0
 
     def pass_year(self, report=False):
+        # Population consumes goods, zeroing supply
+        self.consume_goods()
+
         # Passes a year for every citizen
         for citizen in self.citizens:
             citizen.pass_year()
@@ -113,9 +115,6 @@ class Economy:
 
         if report:
             self.report(age=True, workforce=True, good='silk')
-
-        # Population consumes goods, zeroing supply
-        self.consume_goods()
 
     def report(self, good=None, age=None, workforce=None):
 
