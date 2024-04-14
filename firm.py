@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class Firm:
@@ -8,20 +9,33 @@ class Firm:
         self.good = good
         self.eco = eco
         self.workers = []
+
+        self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
+        self.inventory = {self.good: 0}
+        # Not going to add Account class yet, don't want another point of failure
+        self.balance = 0
+        self.income = 0
+
         self.firm_id = Firm.firm_id
         Firm.firm_id += 1
 
     def __repr__(self):
-        return f'{self.good} firm, employing {len(self.workers)} workers'
+        return f'{self.good}_#{self.firm_id} firm, employing {len(self.workers)} workers'
 
     def produce(self):
-        # if a firm is IN an economy
+        # comment...
+        worker_prod = sum([worker.productivity for worker in self.workers])
+        output = worker_prod * self.productivity
+        # if a firm is IN an economy, sends goods to that market
+        # // not going to alter structure rn
         if self.eco:
-            prod = sum([worker.productivity for worker in self.workers])
-
-            # if firm produces a good that is demanded by the economy
             if self.good in self.eco.goods.keys():
-                self.eco.goods[self.good]['quantity_supplied'] += prod
+                self.eco.goods[self.good]['quantity_supplied'] += output
+
+        if self.good:
+            # self.inventory[self.good] += output
+            self.inventory[self.good] = output
+            pass
 
     def hire_worker(self, worker):
         # Worker is a citizen object
@@ -38,6 +52,10 @@ class Firm:
         # Pays wages
         for worker in self.workers:
             worker.balance += worker.wage
+
+    def find_cost(self):
+        # Cost of labor, materials, profit
+        pass
 
     def set_price(self):
         # Adds market price...
