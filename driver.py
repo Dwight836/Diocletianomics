@@ -1,6 +1,10 @@
-# from citizen import Citizen
+from citizen import Citizen
 from economy import Economy
-# from firm import Firm
+from firm import Firm
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import pprint
 
 
 def main():
@@ -12,24 +16,48 @@ def main():
     eco = Economy()
 
     eco.introduce_goods(goods)
-    eco.introduce_citizens(n=100)
+    eco.introduce_citizens()
     eco.introduce_firms()
     eco.introduce_workers()
 
-    year = 0
+    eco.introduce_good('silk')
+    eco.introduce_firm('silk')
 
-    while year < 10:
+    year = 300
+
+    ls = []
+    while year < 325:
         eco.pass_year()
+        ls.append(eco.goods)
         year += 1
 
-    eco.introduce_good('silk')
-    print(eco.goods['silk'])
+    y = [eco.goods[good]['quantity_supplied'] for good in eco.goods.keys()]
+    x = eco.goods.keys()
+    #plt.bar(x, y)
+    #plt.show()
 
-    eco.pass_year()
-    print(eco.goods['silk'])
+    #pprint.pp(ls)
+    industry = 'bricks'
+    industry_list = [dc[industry]['quantity_supplied'] for dc in ls]
+    pprint.pp(industry_list)
 
-    for firm in eco.firms:
-        print(firm)
+
+
+    #pprint.pp(eco.__dict__)
+    #for firm in eco.firms:
+    #ls = [firm.inventory for firm in eco.firms]
+    #print(ls)
+    #key = 'quantity_supplied'
+
+    #char_ls = [ls[good]]
+
+    #df_timeline = pd.DataFrame(ls)
+    #print(df_timeline.head())
+
+    #df_timeline.to_csv('output.csv')
+
+
+
 
 
 main()
