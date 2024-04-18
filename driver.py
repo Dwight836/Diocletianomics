@@ -23,41 +23,24 @@ def main():
     eco.introduce_good('silk')
     eco.introduce_firm('silk')
 
-    year = 300
+    year = 285
 
-    ls = []
-    while year < 325:
+    brick_ls = []
+    years = []
+
+    while year < 310:
         eco.pass_year()
-        ls.append(eco.goods)
+        print(eco.goods['bricks'])
+
+        brick_ls.append(eco.goods['bricks']['quantity_supplied'])
+        years.append(year)
         year += 1
 
-    y = [eco.goods[good]['quantity_supplied'] for good in eco.goods.keys()]
-    x = eco.goods.keys()
-    #plt.bar(x, y)
-    #plt.show()
-
-    #pprint.pp(ls)
-    industry = 'bricks'
-    industry_list = [dc[industry]['quantity_supplied'] for dc in ls]
-    pprint.pp(industry_list)
-
-
-
-    #pprint.pp(eco.__dict__)
-    #for firm in eco.firms:
-    #ls = [firm.inventory for firm in eco.firms]
-    #print(ls)
-    #key = 'quantity_supplied'
-
-    #char_ls = [ls[good]]
-
-    #df_timeline = pd.DataFrame(ls)
-    #print(df_timeline.head())
-
-    #df_timeline.to_csv('output.csv')
-
-
-
+    plt.plot(years, brick_ls, color='red')
+    plt.xlabel('Year (CE)')
+    plt.ylabel('Production')
+    plt.title('Growth of Imperial Brick Production 285-310')
+    plt.show()
 
 
 main()
