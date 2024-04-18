@@ -8,4 +8,5 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Taxation and defense
 - Non monopolistic firms and price getting (maybe...)
 - Varying levels of market competition and rationality
+- Random shock events such as invasion, plague, etc. 
 
