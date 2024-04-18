@@ -25,21 +25,23 @@ def main():
 
     year = 285
 
-    brick_ls = []
+    industry_ls = []
     years = []
 
     while year < 310:
         eco.pass_year()
-        print(eco.goods['bricks'])
+        industry = 'bricks'
+        # print(eco.goods[industry])
 
-        brick_ls.append(eco.goods['bricks']['quantity_supplied'])
+        industry_ls.append(eco.goods[industry]['quantity_supplied'])
         years.append(year)
         year += 1
 
-    plt.plot(years, brick_ls, color='red')
+    plt.plot(years, industry_ls, color='red')
     plt.xlabel('Year (CE)')
     plt.ylabel('Production')
-    plt.title('Growth of Imperial Brick Production 285-310')
+    plt.title(f'Growth of Imperial {industry} Production 285-310')
+    plt.grid(axis='y')
     plt.show()
 
 
