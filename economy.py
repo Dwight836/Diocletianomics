@@ -47,8 +47,12 @@ class Economy:
         # Adjusts demand based on population from base values
         population = len(self.citizens)
         for good in self.goods.keys():
-            self.goods[good]['quantity_demanded'] = self.goods[good]['demand_weight'] * population
-            self.goods[good]['demand_weight'] = np.random.default_rng().normal(1, 0.05, 1)[0]
+            weight = np.random.default_rng().normal(1, 0.05, 1)[0]
+            #print(f'dem_weight {good} = {dem_weight}')
+
+            self.goods[good]['demand_weight'] = weight
+            #self.goods[good]['quantity_demanded'] = self.goods[good]['demand_weight'] * population
+            self.goods[good]['quantity_demanded'] = weight * population
 
     def get_workforce(self):
         # Updates the workforce of the economy
