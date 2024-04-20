@@ -9,8 +9,9 @@ class Firm:
         self.good = good
         self.eco = eco
         self.workers = []
-
-        self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
+        # imperial factories should be set at 1?
+        #self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
+        self.productivity = 1
         self.inventory = {self.good: 0}
         # Not going to add Account class yet, don't want another point of failure
         self.balance = 0
@@ -31,11 +32,12 @@ class Firm:
         if self.eco:
             if self.good in self.eco.goods.keys():
                 self.eco.goods[self.good]['quantity_supplied'] += output
+                # print('output updates')
 
         if self.good:
             # self.inventory[self.good] += output
             self.inventory[self.good] = output
-            pass
+            # pass
 
     def hire_worker(self, worker):
         # Worker is a citizen object
