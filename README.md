@@ -10,4 +10,4 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Varying levels of market competition and rationality
 - Random shock events such as invasion, plague, etc.
 - Firm reinvestments in labor vs. capital
-
+- Rudimentary dashboard for basic stats (Tableau, possibly?)
