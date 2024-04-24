@@ -44,6 +44,13 @@ class Firm:
         self.workers.append(worker)
         worker.job = self.good
 
+    def remove_worker(self, worker):
+        pass
+
+    def audit_workforce(self):
+        # This clears the firm of retired / dead employees
+        self.workers = [worker for worker in self.workers if worker.workforce]
+
     def set_wage(self):
         # Sets a wage for each worker
         for worker in self.workers:
