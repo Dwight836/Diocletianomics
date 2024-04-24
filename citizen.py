@@ -13,7 +13,7 @@ class Citizen:
             self.age = set_age
 
         self.productivity = np.random.default_rng().normal(1, 0.25, 1)[0]
-        self.workforce = self.age >= 18
+        self.workforce = (self.age >= 18)
         self.alive = True
         self.job = None
         self.id = Citizen.citizen_id
@@ -31,7 +31,7 @@ class Citizen:
         self.age += 1
         self.educate()
         self.join_workforce()
-        self.retire(retirement_age=60)
+        self.retire()
         self.death()
 
     def join_workforce(self):
@@ -43,21 +43,22 @@ class Citizen:
         # Citizens choose to reproduce
         birth_rate = 0.08 * self.alive * (self.age >= 18) * (self.age <= 50)
         kids = rnd.choices([True, False], weights=[birth_rate, 1 - birth_rate], k=1)[0]
-        prod = self.productivity
-        return kids, prod
+        return kids
 
-    def retire(self, retirement_age):
+    def retire(self, retirement_age=60):
         # Citizens retire
         if self.age >= retirement_age:
             self.workforce = False
+            self.job = None
             self.productivity = 0
 
     def death(self):
         # I do not want to work out a death formula right now.
+        # Do something to increase infant mortality
         self.alive = self.age < 75
 
     def educate(self):
-        # Multiple levels of education
+        # Multiple levels of education? Potential tiered class system
         if self.age > 18:
             self.productivity += 0.01
 
