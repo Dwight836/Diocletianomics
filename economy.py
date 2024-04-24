@@ -15,6 +15,9 @@ class Economy:
         self.firms = []
         self.workforce = []
 
+        # Retirement age should be an eco wide variable...maybe
+        # self.retirement_age = 60
+
     def add_citizen(self, citizen):
         # Adds a specific citizen to the economy, adjusting demand accordingly
         self.citizens.append(citizen)
@@ -88,6 +91,7 @@ class Economy:
         # Runs the production cycle for each firm
         for firm in self.firms:
             firm.produce()
+            firm.audit_workforce()
 
     def consume_goods(self):
         # Resets supplies
