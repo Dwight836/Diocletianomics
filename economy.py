@@ -98,11 +98,14 @@ class Economy:
         for firm in self.firms:
             firm.produce()
             firm.audit_workforce()
-            # firm.compete()
+            firm.compete()
+            firm.pass_year()
 
     def set_prices(self):
         # Placeholder method before market integration
-        for good in self.goods:
+        for good in [firm.good for firm in self.firms]:
+
+        #for good in self.goods:
             weighed_outputs = []
             outputs = []
 
