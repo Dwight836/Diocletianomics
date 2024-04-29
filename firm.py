@@ -51,14 +51,14 @@ class Firm:
         # This clears the firm of retired / dead employees
         self.workers = [worker for worker in self.workers if worker.workforce]
 
-    def set_wage(self):
+    def set_wages(self):
         # Sets a wage for each worker
         # /// base wage (1?) for each worker with bonus based on productivity?
         for worker in self.workers:
             wage = worker.productivity
             worker.wage = wage
 
-    def pay_wage(self):
+    def pay_wages(self):
         # Pays wages
         for worker in self.workers:
             worker.balance += worker.wage
@@ -68,7 +68,17 @@ class Firm:
         avg_labor = sum([worker.wage for worker in self.workers]) / len(self.workers)
         materials = self.eco.goods[self.good]['cost_weight']
         cost = ((avg_labor + materials) * self.profit_margin) / self.productivity
+
+        # This cost formula is the same for all firms. Labor, too. unsure why.
+        cost = ((avg_labor + materials) * self.profit_margin)
         return cost
+
+    def pass_year(self):
+
+        self.set_wages()
+        self.pay_wages()
+
+
 
     def compete(self):
         # if market price is lower than internal cost, reduces profit margin
