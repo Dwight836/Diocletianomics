@@ -9,15 +9,13 @@ class Firm:
         self.good = good
         self.eco = eco
         self.workers = []
-        # imperial factories should be set at 1?
         self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
-        # self.productivity = 1
         self.inventory = {self.good: 0}
 
         # Not going to add Account class yet, don't want another point of failure
         self.balance = 0
         self.income = 0
-        self.profit_margin = 0.2
+        self.markup = 0.2
 
         self.market = None
 
@@ -53,7 +51,6 @@ class Firm:
 
     def set_wages(self):
         # Sets a wage for each worker
-        # /// base wage (1?) for each worker with bonus based on productivity?
         for worker in self.workers:
             wage = worker.productivity
             worker.wage = wage
@@ -63,33 +60,27 @@ class Firm:
         for worker in self.workers:
             worker.balance += worker.wage
 
-    def find_cost(self):
-        # Avg cost per 1 good produced
-        avg_labor = sum([worker.wage for worker in self.workers]) / len(self.workers)
-        materials = self.eco.goods[self.good]['cost_weight']
-        cost = ((avg_labor + materials) * self.profit_margin) / self.productivity
-
-        # This cost formula is the same for all firms. Labor, too. unsure why.
-        cost = ((avg_labor + materials) * self.profit_margin)
-        return cost
-
     def pass_year(self):
-
         self.set_wages()
         self.pay_wages()
 
-
+    def find_cost(self):
+        # Avg cost per 1 good produced
+        avg_labor = sum([worker.wage for worker in self.workers]) / self.inventory[self.good]
+        materials = self.eco.goods[self.good]['cost_weight']
+        cost = (avg_labor + materials) * (1 + self.markup)
+        return cost
 
     def compete(self):
         # if market price is lower than internal cost, reduces profit margin
         # // Not in play yet. Very simple competition.
-        competitors = [firm for firm in self.eco.firms if (self.good == firm.good and
-                                                           self.firm_id != firm.firm_id)]
-        if len(competitors) >= 1:
-            # print(f' competitive {self.good} mkt')
-
+        competitors = [firm for firm in self.eco.firms if
+                       (self.good == firm.good and
+                        self.firm_id != firm.firm_id)]
+        
+        if len(competitors) > 0:
             if self.eco.goods[self.good]['price'] < self.find_cost():
-                self.profit_margin -= 0.01
-                print(f'firm {self.firm_id} reduces profit margins')
+                self.markup -= 0.01
+                # print(f'firm {self.firm_id} reduces profit margins')
 
 
