@@ -15,6 +15,7 @@ class Economy:
         self.firms = []
         self.workforce = []
 
+        self.markets = []
         # Retirement age should be an eco wide variable...maybe
         # self.retirement_age = 60
 
@@ -35,10 +36,15 @@ class Economy:
 
     def introduce_good(self, good):
         # this has the option of adding a good (silk?) to the economy)
+        # pseudocode framework...
+        # // for mkt in self.markets:
+        # self.goods[mkt][good] = dc
+
         self.goods[good] = {'quantity_demanded': 0,
                             'quantity_supplied': 0,
                             'demand_weight': np.random.default_rng().normal(1, 0.10, 1)[0] * self.connectivity,
-                            'cost_weight': (np.random.default_rng().normal(1, 0.10, 1)[0]) / self.connectivity}
+                            'cost_weight': (np.random.default_rng().normal(1, 0.10, 1)[0]) / self.connectivity,
+                            'price': 1}
 
     def add_demand(self):
         # This adds a consumer to already existing demand structure
@@ -50,11 +56,11 @@ class Economy:
         # Adjusts demand based on population from base values
         population = len(self.citizens)
         for good in self.goods.keys():
+
+            # /// maybe make existing weight shift rather than generating new float...
             weight = np.random.default_rng().normal(1, 0.05, 1)[0]
-            #print(f'dem_weight {good} = {dem_weight}')
 
             self.goods[good]['demand_weight'] = weight
-            #self.goods[good]['quantity_demanded'] = self.goods[good]['demand_weight'] * population
             self.goods[good]['quantity_demanded'] = weight * population
 
     def get_workforce(self):
@@ -92,6 +98,21 @@ class Economy:
         for firm in self.firms:
             firm.produce()
             firm.audit_workforce()
+            # firm.compete()
+
+    def set_prices(self):
+        # Placeholder method before market integration
+        for good in self.goods:
+            weighed_outputs = []
+            outputs = []
+
+            for firm in self.firms:
+                if firm.good == good:
+                    weighed_outputs.append(firm.find_cost() * firm.inventory[good])
+                    outputs.append(firm.inventory[good])
+
+            weighted_avg_price = sum(weighed_outputs) / sum(outputs)
+            self.goods[good]['price'] = weighted_avg_price
 
     def consume_goods(self):
         # Resets supplies
@@ -120,34 +141,5 @@ class Economy:
 
         # Produces goods and sends report
         self.production_cycle()
-
-        if report:
-            self.report(age=True, workforce=True, good='silk')
-
-    def report(self, good=None, age=None, workforce=None):
-
-        if good:
-            print(f'{self.goods_supplied[good]:.2f} units of {good}')
-
-        if age:
-            ages = [citizen.age for citizen in self.citizens]
-            avg = sum(ages)/len(ages)
-            print(f'{len(self.citizens)} citizens w/Average Citizen age {avg:.2f}')
-
-        if workforce:
-            workforce_ages = [worker.age for worker in self.workforce]
-            avg = sum(workforce_ages)/len(workforce_ages)
-            print(f'{len(self.workforce)} workers w/ Average Worker age {avg:.2f}')
-
-
-
-
-
-
-
-
-
-
-
-
+        self.set_prices()
 
