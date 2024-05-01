@@ -140,11 +140,8 @@ class Economy:
 
             if citizen.reproduce():
                 # Changing baby age to have been born anytime in the past year
-                baby = Citizen(set_age=rnd.uniform(0, 1))
-
-                survived = rnd.choices([True, False], weights=[0.7, 0.3], k=1)[0]
-                if survived:
-                    self.add_citizen(baby)
+                baby = Citizen(set_age=rnd.uniform(0, 1), parent=citizen)
+                self.add_citizen(baby)
 
         # Adjusts citizen list
         self.get_citizens()
