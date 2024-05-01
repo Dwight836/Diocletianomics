@@ -20,27 +20,13 @@ def main():
     e.firms.append(f2)
     e.firms.append(f3)
 
-    e.introduce_citizens(n=1000)
+    e.introduce_citizens(n=100)
     e.introduce_workers()
 
-    for _ in range(5):
+    for _ in range(25):
         e.pass_year()
         print(e.goods['grain']['price'])
-
-    # m.set_price()
-    # print(e.goods)
-
-
-
-
-
-
-
-
-
-
-
-
+        # print(f1.balance, f2.balance)
 
 
 main()
