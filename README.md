@@ -8,4 +8,5 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Random shock events such as invasion, plague, etc.
 - Firm reinvestments in labor vs. capital
 - Simple dashboard for basic stats (Tableau, possibly?)
-- Organic firm creation by Citizen actors
+- Natural firm creation
+- Database supports for simpler viz
