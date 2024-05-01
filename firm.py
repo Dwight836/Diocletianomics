@@ -10,11 +10,9 @@ class Firm:
         self.eco = eco
         self.workers = []
         self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
-        # Changing inventory to start w/ 1
         self.inventory = {self.good: 1}
 
-        # Not going to add Account class yet, don't want another point of failure
-        self.balance = 0
+        self.balance = 1000
         self.income = 0
         self.markup = 0.2
 
@@ -25,6 +23,18 @@ class Firm:
 
     def __repr__(self):
         return f'{self.productivity:.3f}x -- {self.good}_#{self.firm_id} firm, employing {len(self.workers)} workers'
+
+    def pass_year(self):
+        # I want to everything into this one method
+        self.audit_workforce()
+        self.set_wages()
+        self.produce()
+
+        self.sell_goods()
+        self.pay_costs()
+        self.pay_wages()
+
+        self.compete()
 
     def produce(self):
         # comment...
@@ -53,21 +63,15 @@ class Firm:
     def set_wages(self):
         # Sets a wage for each worker
         for worker in self.workers:
-            wage = 1 + worker.productivity**2
+            wage = (1 + worker.productivity)
             worker.wage = wage
 
+    # What???
     def pay_wages(self):
         # Pays wages
         for worker in self.workers:
             worker.balance += worker.wage
-
-    def pass_year(self):
-        # I want to everything into this one method
-        self.audit_workforce()
-        self.set_wages()
-        self.produce()
-        self.pay_wages()
-        self.compete()
+            self.balance -= worker.wage
 
     def find_cost(self):
         # if len(self.workers) > 0:
@@ -78,20 +82,30 @@ class Firm:
             materials = self.eco.goods[self.good]['cost_weight']
             cost = (avg_labor + materials) * (1 + self.markup)
             return cost
-
         else:
             return 1
 
+    def sell_goods(self):
+        # Sells inventory
+        revenue = self.inventory[self.good] * self.eco.goods[self.good]['price']
+        self.balance += revenue
+
+    def pay_costs(self):
+        # Pays for materials
+        obligations = self.inventory[self.good] * self.eco.goods[self.good]['cost_weight']
+        self.balance -= obligations
+
     def compete(self):
         # if market price is lower than internal cost, reduces profit margin
-        # Very simple competition.
         competitors = [firm for firm in self.eco.firms if
                        (self.good == firm.good and
                         self.firm_id != firm.firm_id)]
 
         # if len(competitors) > 0:
         if competitors:
-            if self.eco.goods[self.good]['price'] < self.find_cost():
+            # if marking up and non-competitive
+            if self.eco.goods[self.good]['price'] < self.find_cost()\
+                    and self.markup > 0:
                 self.markup -= 0.01
                 # print(f'firm {self.firm_id} reduces profit margins')
             else:
