@@ -5,7 +5,7 @@ import random as rnd
 class Citizen:
     citizen_id = 0
 
-    def __init__(self, set_age=None):
+    def __init__(self, set_age=None, parent=None):
 
         # Sets age to a rnd variable
         self.age = rnd.uniform(0, 75)
@@ -22,6 +22,8 @@ class Citizen:
         self.wage = 0
         self.balance = 0
         Citizen.citizen_id += 1
+
+        self.parent = parent
 
     def __repr__(self):
         return f'Citizen #{self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
@@ -41,9 +43,20 @@ class Citizen:
 
     def reproduce(self):
         # Citizens choose to reproduce
+        # kids, Boolean
         birth_rate = 0.08 * self.alive * (self.age >= 18) * (self.age <= 50)
+
+        #if kids:
+            #return Citizen(set_age=rnd.uniform, parent=self)
+
         kids = rnd.choices([True, False], weights=[birth_rate, 1 - birth_rate], k=1)[0]
-        return kids
+        survived = rnd.choices([True, False], weights=[0.7, 0.3], k=1)[0]
+
+        if kids and survived:
+            # Will eventually return baby. But not right now.
+            baby = Citizen(set_age=rnd.uniform(0, 1), parent=self)
+
+            return True
 
     def retire(self, retirement_age=60):
         # Citizens retire
@@ -59,7 +72,6 @@ class Citizen:
 
     def educate(self):
         # Multiple levels of education? Potential tiered class system
-        if self.age > 18:
+        if self.age < 18:
             self.productivity += 0.01
-
 
