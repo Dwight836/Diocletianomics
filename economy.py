@@ -94,35 +94,50 @@ class Economy:
         self.firms.append(f)
 
     def production_cycle(self):
-        # Runs the production cycle for each firm
+        # Runs the annual production cycle for each firm
         for firm in self.firms:
-            firm.produce()
-            firm.audit_workforce()
-            firm.compete()
             firm.pass_year()
 
     def set_prices(self):
         # Placeholder method before market integration
         for good in [firm.good for firm in self.firms]:
 
-        #for good in self.goods:
             weighed_outputs = []
             outputs = []
 
+            # for each firm producing that good
             for firm in self.firms:
-                if firm.good == good:
+                if firm.good == good and firm.inventory[good] > 0:
                     weighed_outputs.append(firm.find_cost() * firm.inventory[good])
                     outputs.append(firm.inventory[good])
 
-            weighted_avg_price = sum(weighed_outputs) / sum(outputs)
-            self.goods[good]['price'] = weighted_avg_price
+            # if lists are not empty (theoretically should not occur)
+            # // I can clean up this code a lot later.
+            if weighed_outputs and outputs:
+
+                weighed_prod = sum(weighed_outputs)
+                total_prod = sum(outputs)
+
+                if 0 not in (weighed_prod, total_prod):
+                    weighted_avg_price = weighed_prod / total_prod
+
+                else:
+                    weighted_avg_price = 1
+                self.goods[good]['price'] = weighted_avg_price
+
+
+
+
+
+
+
 
     def consume_goods(self):
         # Resets supplies
         for good in self.goods.keys():
             self.goods[good]['quantity_supplied'] = 0
 
-    def pass_year(self, report=False):
+    def pass_year(self):
         # Population consumes goods, zeroing supply
         self.consume_goods()
 
@@ -131,8 +146,9 @@ class Economy:
             citizen.pass_year()
 
             if citizen.reproduce():
-                baby = Citizen(set_age=0)
-                self.citizens.append(baby)
+                # Changing baby age to have been born anytime in the past year
+                baby = Citizen(set_age=rnd.uniform(0, 1))
+                self.add_citizen(baby)
 
         # Adjusts citizen list
         self.get_citizens()
@@ -143,6 +159,7 @@ class Economy:
         self.employ_workers()
 
         # Produces goods and sends report
+        # This is essentially pass_year for all firms
         self.production_cycle()
         self.set_prices()
 
