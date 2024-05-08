@@ -1,4 +1,5 @@
 import numpy as np
+import random as rnd
 
 
 class Firm:
@@ -9,7 +10,8 @@ class Firm:
         self.good = good
         self.eco = eco
         self.workers = []
-        self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
+        # self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
+        self.productivity = rnd.uniform(0.8, 1.2)
         self.inventory = {self.good: 1}
 
         self.balance = 1000
@@ -63,10 +65,10 @@ class Firm:
     def set_wages(self):
         # Sets a wage for each worker
         for worker in self.workers:
-            wage = (1 + worker.productivity)
+            # Add additional rnd
+            wage = (1 + worker.productivity**2)
             worker.wage = wage
 
-    # What???
     def pay_wages(self):
         # Pays wages
         for worker in self.workers:
@@ -74,9 +76,7 @@ class Firm:
             self.balance -= worker.wage
 
     def find_cost(self):
-        # if len(self.workers) > 0:
         if self.workers:
-
             # Avg cost per 1 good produced IF firm has employees
             avg_labor = sum([worker.wage for worker in self.workers]) / self.inventory[self.good]
             materials = self.eco.goods[self.good]['cost_weight']
