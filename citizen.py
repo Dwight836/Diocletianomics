@@ -24,6 +24,7 @@ class Citizen:
         Citizen.citizen_id += 1
 
         self.parent = parent
+        self.children = []
 
     def __repr__(self):
         return f'Citizen #{self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
@@ -33,8 +34,10 @@ class Citizen:
         self.age += 1
         self.educate()
         self.join_workforce()
+
         self.retire()
         self.death()
+        self.inherit()
 
     def join_workforce(self):
         # Makes citizen join the workforce
@@ -43,20 +46,16 @@ class Citizen:
 
     def reproduce(self):
         # Citizens choose to reproduce
-        # kids, Boolean
-        birth_rate = 0.08 * self.alive * (self.age >= 18) * (self.age <= 50)
-
-        #if kids:
-            #return Citizen(set_age=rnd.uniform, parent=self)
-
+        birth_rate = 0.05 * self.alive * (self.age >= 18) * (self.age <= 50)
         kids = rnd.choices([True, False], weights=[birth_rate, 1 - birth_rate], k=1)[0]
         survived = rnd.choices([True, False], weights=[0.7, 0.3], k=1)[0]
 
+        # If citizen chose to have a kid, and it survived Y1
         if kids and survived:
-            # Will eventually return baby. But not right now.
+            # Baby will eventually be returned. but not right now.
             baby = Citizen(set_age=rnd.uniform(0, 1), parent=self)
-
-            return True
+            self.children.append(baby)
+            return baby
 
     def retire(self, retirement_age=60):
         # Citizens retire
@@ -66,8 +65,10 @@ class Citizen:
             self.productivity = 0
 
     def death(self):
-        # I do not want to work out a death formula right now.
-        # Do something to increase infant mortality
+        # Rudimentary death system
+        weights = None
+        # weights = [500, self.age**2]
+        living = rnd.choices([True, False], weights=weights, k=1)[0]
         self.alive = self.age < 75
 
     def educate(self):
@@ -75,3 +76,12 @@ class Citizen:
         if self.age < 18:
             self.productivity += 0.01
 
+    def inherit(self, tax_rate=0):
+        # Citizens receive the assets of their parents upon death.
+        if not self.alive:
+            # If dead, loops through child list
+            if self.children:
+                estate = self.balance
+                estate -= (estate * tax_rate)
+                for child in self.children:
+                    child.balance += (estate / len(self.children))
