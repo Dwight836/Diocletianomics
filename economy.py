@@ -108,7 +108,7 @@ class Economy:
             # for each firm producing that good
             for firm in self.firms:
                 if firm.good == good and firm.inventory[good] > 0:
-                    weighed_outputs.append(firm.find_cost() * firm.inventory[good])
+                    weighed_outputs.append(firm.find_average_cost() * firm.inventory[good])
                     outputs.append(firm.inventory[good])
 
             # if lists are not empty (theoretically should not occur)
@@ -131,6 +131,7 @@ class Economy:
             self.goods[good]['quantity_supplied'] = 0
 
     def pass_year(self):
+
         # Population consumes goods, zeroing supply
         self.consume_goods()
 
@@ -138,9 +139,8 @@ class Economy:
         for citizen in self.citizens:
             citizen.pass_year()
 
-            if citizen.reproduce():
-                # Changing baby age to have been born anytime in the past year
-                baby = Citizen(set_age=rnd.uniform(0, 1), parent=citizen)
+            baby = citizen.reproduce()
+            if baby:
                 self.add_citizen(baby)
 
         # Adjusts citizen list
@@ -152,7 +152,6 @@ class Economy:
         self.employ_workers()
 
         # Produces goods and sends report
-        # This is essentially pass_year for all firms
         self.production_cycle()
         self.set_prices()
 
