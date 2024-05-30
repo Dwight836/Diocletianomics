@@ -58,7 +58,8 @@ class Economy:
         for good in self.goods.keys():
 
             # /// maybe make existing weight shift rather than generating new float...
-            weight = np.random.default_rng().normal(1, 0.05, 1)[0]
+            weight = np.random.default_rng().normal(loc=self.goods[good]['demand_weight'], scale=0.01, size=1)[0]
+            #weight = np.random.default_rng().normal(1, 0.05, 1)[0]
 
             self.goods[good]['demand_weight'] = weight
             self.goods[good]['quantity_demanded'] = weight * population
