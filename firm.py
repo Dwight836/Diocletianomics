@@ -5,7 +5,7 @@ import random as rnd
 class Firm:
     firm_id = 0
     
-    def __init__(self, good=None, eco=None):
+    def __init__(self, good=None, eco=None, owner=None):
         # Each firm produces a good
         self.good = good
         self.eco = eco
@@ -19,6 +19,9 @@ class Firm:
         self.markup = 0.2
 
         self.market = None
+
+        # KWARG
+        self.owner = owner
 
         self.firm_id = Firm.firm_id
         Firm.firm_id += 1
@@ -42,13 +45,11 @@ class Firm:
         # comment...
         worker_prod = sum([worker.productivity for worker in self.workers])
         output = worker_prod * self.productivity
-        # if a firm is IN an economy, sends goods to that market
 
-        # // not going to alter structure rn
+        # if a firm is IN an economy, sends goods to that market
         if self.eco:
             if self.good in self.eco.goods.keys():
                 self.eco.goods[self.good]['quantity_supplied'] += output
-                # print('output updates')
 
         if self.good:
             self.inventory[self.good] = output
@@ -60,12 +61,12 @@ class Firm:
 
     def audit_workforce(self):
         # This clears the firm of retired / dead employees
-        self.workers = [worker for worker in self.workers if worker.workforce]
+        self.workers = [worker for worker in self.workers if worker.workforce and worker.alive]
 
     def set_wages(self):
         # Sets a wage for each worker
         for worker in self.workers:
-            # Add additional rnd
+            # Add additional rnd?
             wage = (1 + worker.productivity**2)
             worker.wage = wage
 
@@ -75,7 +76,7 @@ class Firm:
             worker.balance += worker.wage
             self.balance -= worker.wage
 
-    def find_cost(self):
+    def find_average_cost(self):
         if self.workers:
             # Avg cost per 1 good produced IF firm has employees
             avg_labor = sum([worker.wage for worker in self.workers]) / self.inventory[self.good]
@@ -86,8 +87,9 @@ class Firm:
             return 1
 
     def sell_goods(self):
-        # Sells inventory
+        # Sells inventory at market price
         revenue = self.inventory[self.good] * self.eco.goods[self.good]['price']
+        self.income = revenue
         self.balance += revenue
 
     def pay_costs(self):
@@ -104,12 +106,14 @@ class Firm:
         # if len(competitors) > 0:
         if competitors:
             # if marking up and non-competitive
-            if self.eco.goods[self.good]['price'] < self.find_cost()\
+            if self.eco.goods[self.good]['price'] < self.find_average_cost()\
                     and self.markup > 0:
                 self.markup -= 0.01
                 # print(f'firm {self.firm_id} reduces profit margins')
             else:
                 # self.markup += 0.01
                 pass
+
+
 
 
