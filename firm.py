@@ -88,31 +88,36 @@ class Firm:
 
     def sell_goods(self):
         # Sells inventory at market price
-        revenue = self.inventory[self.good] * self.eco.goods[self.good]['price']
-        self.income = revenue
-        self.balance += revenue
+        if self.eco:
+            revenue = self.inventory[self.good] * self.eco.goods[self.good]['price']
+            self.income = revenue
+            self.balance += revenue
 
     def pay_costs(self):
         # Pays for materials
-        obligations = self.inventory[self.good] * self.eco.goods[self.good]['cost_weight']
-        self.balance -= obligations
+
+        if self.eco:
+            obligations = self.inventory[self.good] * self.eco.goods[self.good]['cost_weight']
+            self.balance -= obligations
 
     def compete(self):
         # if market price is lower than internal cost, reduces profit margin
-        competitors = [firm for firm in self.eco.firms if
-                       (self.good == firm.good and
-                        self.firm_id != firm.firm_id)]
+        if self.eco:
 
-        # if len(competitors) > 0:
-        if competitors:
-            # if marking up and non-competitive
-            if self.eco.goods[self.good]['price'] < self.find_average_cost()\
-                    and self.markup > 0:
-                self.markup -= 0.01
-                # print(f'firm {self.firm_id} reduces profit margins')
-            else:
-                # self.markup += 0.01
-                pass
+            competitors = [firm for firm in self.eco.firms if
+                           (self.good == firm.good and
+                            self.firm_id != firm.firm_id)]
+
+            # if len(competitors) > 0:
+            if competitors:
+                # if marking up and non-competitive
+                if self.eco.goods[self.good]['price'] < self.find_average_cost()\
+                        and self.markup > 0:
+                    self.markup -= 0.01
+                    # print(f'firm {self.firm_id} reduces profit margins')
+                else:
+                    # self.markup += 0.01
+                    pass
 
 
 
