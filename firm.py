@@ -119,6 +119,19 @@ class Firm:
                     # self.markup += 0.01
                     pass
 
+    def promote(self, x=1):
+        n_structures = x
+        # for i in range(len_structures)
+        # have a 0.8, 1.2) management variable
+        # n_structures to be a firm_wide attribute?
+
+        # assumes 1D worker array. might not always be the case.
+        prods = [worker.productivity for worker in self.workers]
+
+        # most productive worker
+        champ = self.workers[prods.index(max(prods))]
+        return champ
+
 
 
 
