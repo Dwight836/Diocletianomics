@@ -2,6 +2,7 @@ import random as rnd
 import numpy as np
 
 from citizen import Citizen
+from aristocrat import Aristocrat
 from firm import Firm
 
 
@@ -9,28 +10,31 @@ class Economy:
 
     def __init__(self):
 
+        self.history = list()
+
         self.goods = dict()
         self.connectivity = 1
         self.citizens = []
         self.firms = []
         self.workforce = []
+        self.aristocrats = []
 
         self.markets = []
         # Retirement age should be an eco wide variable...maybe
         # self.retirement_age = 60
 
     def add_citizen(self, citizen):
-        # Adds a specific citizen to the economy, adjusting demand accordingly
+        # Adds one citizen to the economy, adjusting demand
         self.citizens.append(citizen)
         self.add_demand()
 
     def introduce_citizens(self, n=1000):
-        # Batch introduces n citizens to the economy
+        # Batch introduces n citizens
         for _ in range(n):
             self.add_citizen(Citizen())
 
     def introduce_goods(self, goods_list):
-        # Introduces goods to the economy, initializing supply at 0
+        # Introduces goods, initializing supply at 0
         for good in goods_list:
             self.introduce_good(good)
 
@@ -71,6 +75,10 @@ class Economy:
     def get_citizens(self):
         # Updates the population of the economy
         self.citizens = [citizen for citizen in self.citizens if citizen.alive]
+
+    def get_aristocrats(self):
+        # Updates aristocrat population
+        self.aristocrats = [Aristocrat(citizen) for citizen in self.citizens if citizen.job == 'nobility']
 
     def employ_workers(self):
         # I would eventually like weights to be wages or some measure
@@ -155,4 +163,18 @@ class Economy:
         # Produces goods and sends report
         self.production_cycle()
         self.set_prices()
+
+    def simulate(self, n_years=25, n_citizens=1000,
+                 goods=('pottery', 'bricks', 'glass', 'metal', 'ships', 'wrought iron', 'processed fish', 'silk')):
+
+        self.introduce_goods(goods)
+        self.introduce_citizens(n=n_citizens)
+        self.introduce_firms()
+        self.introduce_workers()
+
+        for _ in range(n_years):
+            self.history.append(self)
+            self.pass_year()
+
+
 
