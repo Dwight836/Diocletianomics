@@ -21,13 +21,14 @@ class Citizen:
         # I am going to make a rudimentary bank account system.
         self.wage = 0
         self.balance = 0
-        Citizen.citizen_id += 1
 
         self.parent = parent
         self.children = []
 
+        Citizen.citizen_id += 1
+
     def __repr__(self):
-        return f'Citizen #{self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
+        return f'Citizen {self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
 
     def pass_year(self):
         # This passes one year for a citizen
@@ -52,7 +53,6 @@ class Citizen:
 
         # If citizen chose to have a kid, and it survived Y1
         if kids and survived:
-            # Baby will eventually be returned. but not right now.
             baby = Citizen(set_age=rnd.uniform(0, 1), parent=self)
             self.children.append(baby)
             return baby
@@ -85,3 +85,18 @@ class Citizen:
                 estate -= (estate * tax_rate)
                 for child in self.children:
                     child.balance += (estate / len(self.children))
+
+    def promote(self):
+        # Citizens become aristocrats
+        # self.job = 'nobility?'
+        if self.balance >= 1000:
+            self.job = 'nobility'
+            pass
+
+
+
+
+
+
+
+
