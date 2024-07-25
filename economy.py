@@ -1,5 +1,6 @@
 import random as rnd
 import numpy as np
+import copy
 
 from citizen import Citizen
 from aristocrat import Aristocrat
@@ -7,10 +8,9 @@ from firm import Firm
 
 
 class Economy:
+    history = []
 
     def __init__(self):
-
-        self.history = list()
 
         self.goods = dict()
         self.connectivity = 1
@@ -22,6 +22,7 @@ class Economy:
         self.markets = []
         # Retirement age should be an eco wide variable...maybe
         # self.retirement_age = 60
+
 
     def add_citizen(self, citizen):
         # Adds one citizen to the economy, adjusting demand
@@ -98,8 +99,8 @@ class Economy:
         for good in self.goods.keys():
             self.introduce_firm(good)
 
-    def introduce_firm(self, good):
-        f = Firm(good=good, eco=self)
+    def introduce_firm(self, good, owner=None):
+        f = Firm(good=good, eco=self, owner=owner)
         self.firms.append(f)
 
     def production_cycle(self):
@@ -120,8 +121,7 @@ class Economy:
                     weighed_outputs.append(firm.find_average_cost() * firm.inventory[good])
                     outputs.append(firm.inventory[good])
 
-            # if lists are not empty (theoretically should not occur)
-            # // I can clean up this code a lot later.
+            # If lists exist
             if weighed_outputs and outputs:
 
                 weighed_prod = sum(weighed_outputs)
@@ -163,8 +163,9 @@ class Economy:
         # Produces goods and sends report
         self.production_cycle()
         self.set_prices()
+        self.history.append(copy.deepcopy(self))
 
-    def simulate(self, n_years=25, n_citizens=1000,
+    def simulate(self, n_years=25, n_citizens=100,
                  goods=('pottery', 'bricks', 'glass', 'metal', 'ships', 'wrought iron', 'processed fish', 'silk')):
 
         self.introduce_goods(goods)
@@ -172,9 +173,10 @@ class Economy:
         self.introduce_firms()
         self.introduce_workers()
 
-        for _ in range(n_years):
-            self.history.append(self)
+        ct = 0
+        while ct < n_years:
             self.pass_year()
+            ct += 1
 
 
 
