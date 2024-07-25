@@ -132,6 +132,12 @@ class Firm:
         champ = self.workers[prods.index(max(prods))]
         return champ
 
+    def pay_profits(self):
+        # Need to create profit system...
+        profit = self.balance
+        if self.owner:
+            self.owner.balance += profit
+
 
 
 
