@@ -8,6 +8,8 @@ class Government:
         self.tax_rate = 0.05
         self.budget = {'military': 0, 'administration': 0, 'other': 0}
         self.balance = 0
+        self.leader = None
+        self.property = list()
 
     def tax(self):
         # taxes citizens directly from balance. account system
@@ -29,3 +31,9 @@ class Government:
             relieved = rnd.choices([True, False], [0.01, 0.99], k=1)[0]
             if relieved:
                 debtor.balance = 0
+
+    def collapse(self):
+        self.property = list()
+        self.balance = 0
+
+
