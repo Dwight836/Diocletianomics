@@ -7,7 +7,9 @@ class Citizen:
 
     def __init__(self, set_age=None, parent=None):
 
-        # Sets age to a rnd variable
+        self.id = Citizen.citizen_id
+        Citizen.citizen_id += 1
+
         self.age = rnd.uniform(0, 75)
         if set_age is not None:
             self.age = set_age
@@ -16,16 +18,19 @@ class Citizen:
         self.workforce = (self.age >= 18)
         self.alive = True
         self.job = None
-        self.id = Citizen.citizen_id
 
-        # I am going to make a rudimentary bank account system.
         self.wage = 0
         self.balance = 0
 
         self.parent = parent
+
+        if self.parent:
+            if self.parent.job == 'nobility':
+                self.job = 'nobility'
+
         self.children = []
 
-        Citizen.citizen_id += 1
+
 
     def __repr__(self):
         return f'Citizen {self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
@@ -47,7 +52,7 @@ class Citizen:
 
     def reproduce(self):
         # Citizens choose to reproduce
-        birth_rate = 0.05 * self.alive * (self.age >= 18) * (self.age <= 50)
+        birth_rate = 0.08 * self.alive * (self.age >= 18) * (self.age <= 50)
         kids = rnd.choices([True, False], weights=[birth_rate, 1 - birth_rate], k=1)[0]
         survived = rnd.choices([True, False], weights=[0.7, 0.3], k=1)[0]
 
