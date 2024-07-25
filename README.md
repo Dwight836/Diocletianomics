@@ -15,3 +15,4 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Ownership and property confiscations
 - State collapse and reconstruction
 - Disasters + civil wars
+- Barriers to entry
