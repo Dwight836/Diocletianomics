@@ -8,10 +8,10 @@ class Aristocrat(Citizen):
     def __init__(self, eco=None):
         super().__init__()
 
+        self.eco = eco
         if self.parent and not eco:
             self.eco = self.parent.eco
 
-        self.eco = eco
         self.balance = rnd.uniform(1_000, 10_000)
         self.job = 'nobility'
         self.property = []
@@ -24,12 +24,17 @@ class Aristocrat(Citizen):
 
     def create_firm(self):
         # Aristocrats create firm into eco interface!
-        #if self.job == 'nobility' and self.balance <= 1000 and self.eco:
         if self.balance >= 1000 and self.eco:
-            investment_good = rnd.choices(list(self.eco.goods.keys()))[0]
+            goods = list(self.eco.goods.keys())
+            investment_good = rnd.choices(goods)[0]
             self.balance -= 1000
             self.eco.introduce_firm(good=investment_good, owner=self)
             self.property.append(self.eco.firms[-1])
+
+    def pass_year(self):
+        if rnd.choices([True, False], [0.01, 0.99])[0]:
+            self.create_firm()
+
 
 
 

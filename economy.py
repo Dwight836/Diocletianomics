@@ -23,7 +23,6 @@ class Economy:
         # Retirement age should be an eco wide variable...maybe
         # self.retirement_age = 60
 
-
     def add_citizen(self, citizen):
         # Adds one citizen to the economy, adjusting demand
         self.citizens.append(citizen)
@@ -33,6 +32,10 @@ class Economy:
         # Batch introduces n citizens
         for _ in range(n):
             self.add_citizen(Citizen())
+            a = Aristocrat(eco=self)
+            #print(a.balance)
+            self.add_citizen(a)
+
 
     def introduce_goods(self, goods_list):
         # Introduces goods, initializing supply at 0
@@ -64,8 +67,6 @@ class Economy:
 
             # /// maybe make existing weight shift rather than generating new float...
             weight = np.random.default_rng().normal(loc=self.goods[good]['demand_weight'], scale=0.01, size=1)[0]
-            #weight = np.random.default_rng().normal(1, 0.05, 1)[0]
-
             self.goods[good]['demand_weight'] = weight
             self.goods[good]['quantity_demanded'] = weight * population
 
@@ -104,7 +105,8 @@ class Economy:
         self.firms.append(f)
 
     def production_cycle(self):
-        # Runs the annual production cycle for each firm
+        # Runs production cycle for non-bankrupt firms
+        self.firms = [firm for firm in self.firms if firm.open]
         for firm in self.firms:
             firm.pass_year()
 
@@ -140,7 +142,6 @@ class Economy:
             self.goods[good]['quantity_supplied'] = 0
 
     def pass_year(self):
-
         # Population consumes goods, zeroing supply
         self.consume_goods()
 
@@ -152,8 +153,10 @@ class Economy:
             if baby:
                 self.add_citizen(baby)
 
-        # Adjusts citizen list
+
+        # Adjusts citizens and aristocrats
         self.get_citizens()
+        self.get_aristocrats()
 
         # Adjusts demand and workforce based on population
         self.adjust_demand()
@@ -163,11 +166,12 @@ class Economy:
         # Produces goods and sends report
         self.production_cycle()
         self.set_prices()
-        self.history.append(copy.deepcopy(self))
+
+        Economy.history.append(copy.deepcopy(self))
 
     def simulate(self, n_years=25, n_citizens=100,
                  goods=('pottery', 'bricks', 'glass', 'metal', 'ships', 'wrought iron', 'processed fish', 'silk')):
-
+        # Runs basic simulation with default kwargs
         self.introduce_goods(goods)
         self.introduce_citizens(n=n_citizens)
         self.introduce_firms()
@@ -177,6 +181,3 @@ class Economy:
         while ct < n_years:
             self.pass_year()
             ct += 1
-
-
-

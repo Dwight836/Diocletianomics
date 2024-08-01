@@ -14,6 +14,7 @@ class Citizen:
         if set_age is not None:
             self.age = set_age
 
+        # should be 40% less in cases...
         self.productivity = np.random.default_rng().normal(1, 0.25, 1)[0]
         self.workforce = (self.age >= 18)
         self.alive = True
@@ -23,14 +24,10 @@ class Citizen:
         self.balance = 0
 
         self.parent = parent
-
         if self.parent:
             if self.parent.job == 'nobility':
                 self.job = 'nobility'
-
         self.children = []
-
-
 
     def __repr__(self):
         return f'Citizen {self.id} | {self.age:.1f} y.o | {self.productivity:.1f}x, {self.job} worker'
@@ -93,10 +90,15 @@ class Citizen:
 
     def promote(self):
         # Citizens become aristocrats
-        # self.job = 'nobility?'
         if self.balance >= 1000:
             self.job = 'nobility'
-            pass
+
+    def demote(self):
+        # Citizens become unfree...
+        if self.balance <= -1000:
+            self.job = None
+            # self.freedom = False
+
 
 
 

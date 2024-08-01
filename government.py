@@ -32,7 +32,8 @@ class Government:
             if relieved:
                 debtor.balance = 0
 
-    def collapse(self):
+    def collapse(self, severity=1):
+
         self.property = list()
         self.balance = 0
 

@@ -10,6 +10,9 @@ from firm import Firm
 import matplotlib.pyplot as plt
 import seaborn as sns
 import random as rnd
+from pprint import pprint
+
+from collections import Counter
 
 
 def main():
@@ -31,7 +34,7 @@ def main():
 
     e.firms.append(f3)
 
-    e.introduce_citizens(n=100)
+    e.introduce_citizens(n=1000)
     e.introduce_workers()
 
     x1 = list()
@@ -45,19 +48,29 @@ def main():
     for _ in range(25):
         e.pass_year()
         # print(e.goods['grain']['price'])
-        x1.append(f1.balance)
-        x2.append(f2.balance)
-        x3.append(f3.balance)
+        #x1.append(f1.balance)
+        #x2.append(f2.balance)
+        #x3.append(f3.balance)
 
-        c1.append(f1.markup)
-        c2.append(f2.markup)
-        c3.append(f3.markup)
+        #c1.append(f1.markup)
+        #c2.append(f2.markup)
+        #c3.append(f3.markup)
 
-    cmap = 'copper'
+        #c1.append(f1.balance)
+        #c2.append(f2.balance)
+        #c3.append(f3.balance)
+
+        c1.append(f1.income)
+        c2.append(f2.income)
+        c3.append(f3.income)
+
+        x1.append(f1.markup)
+        x2.append(f2.markup)
+        x3.append(f3.markup)
+
+    cmap = 'Purples'
 
     # Find a way to flip firm balance to color and markup as Y axis.
-
-
     sns.set()
 
     plt.plot(range(len(x1)), x1, label=f'f1 {f1.productivity:.2f}', c='red')
@@ -68,13 +81,14 @@ def main():
     plt.scatter(range(len(x2)), x2, c=c2, marker='o', cmap=cmap)
     plt.scatter(range(len(x3)), x3, c=c3, marker='o', cmap=cmap)
 
-    plt.ylabel('firm balance')
-    plt.colorbar()
+    plt.xlabel('years')
+    plt.ylabel('firm markup')
+    plt.colorbar(label='Income')
     plt.legend()
     plt.show()
 
 
-# main()
+main()
 
 def main2():
 
@@ -88,19 +102,18 @@ def main2():
 def maine():
 
     e = Economy()
-    e.simulate()
-    #print(e.history)
+    e.simulate(n_citizens=1000)
+    #ecos = [eco.goods['glass']['price'] for eco in Economy.history]
+    #pops = [len(eco.citizens) for eco in Economy.history]
+    #pprint(ecos)
+    #print(pops)
 
-    a = Aristocrat(eco=e)
-    a.create_firm()
-
-    print(a.property)
-    #print(list(e.goods.keys()))
-    #e.aristocrats.append(a)
-    #print(e.aristocrats[0] == a)
-    #a.create_firm()
+    #a = Aristocrat(eco=e)
+    #print(e.goods.keys())
+    firms = [firm for firm in e.firms]
+    # Most firms don't have workers...
 
 
-maine()
+# maine()
 
 

@@ -6,21 +6,19 @@ class Firm:
     firm_id = 0
     
     def __init__(self, good=None, eco=None, owner=None):
-        # Each firm produces a good
+
         self.good = good
         self.eco = eco
         self.workers = []
-        # self.productivity = np.random.default_rng().normal(1, 0.1, 1)[0]
         self.productivity = rnd.uniform(0.8, 1.2)
         self.inventory = {self.good: 1}
+        self.open = True
 
         self.balance = 1000
         self.income = 0
         self.markup = 0.2
 
         self.market = None
-
-        # KWARG
         self.owner = owner
 
         self.firm_id = Firm.firm_id
@@ -95,7 +93,6 @@ class Firm:
 
     def pay_costs(self):
         # Pays for materials
-
         if self.eco:
             obligations = self.inventory[self.good] * self.eco.goods[self.good]['cost_weight']
             self.balance -= obligations
@@ -108,18 +105,17 @@ class Firm:
                            (self.good == firm.good and
                             self.firm_id != firm.firm_id)]
 
-            # if len(competitors) > 0:
             if competitors:
                 # if marking up and non-competitive
                 if self.eco.goods[self.good]['price'] < self.find_average_cost()\
                         and self.markup > 0:
                     self.markup -= 0.01
-                    # print(f'firm {self.firm_id} reduces profit margins')
                 else:
-                    # self.markup += 0.01
-                    pass
+                    self.markup += 0.01
+
 
     def promote(self, x=1):
+        # Max number of people that can be managed is 12... 
         n_structures = x
         # for i in range(len_structures)
         # have a 0.8, 1.2) management variable
@@ -133,11 +129,16 @@ class Firm:
         return champ
 
     def pay_profits(self):
-        # Need to create profit system...
+        # Profit system
         profit = self.balance
         if self.owner:
             self.owner.balance += profit
 
+    def declare_bankruptcy(self):
+        if self.balance <= -1000:
+            self.open = False
+            self.eco = None
+            self.owner = None
 
 
 
