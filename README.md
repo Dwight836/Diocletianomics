@@ -16,3 +16,4 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - State collapse and reconstruction
 - Disasters + civil wars
 - Barriers to entry
+- Firm management structure / nested levels
