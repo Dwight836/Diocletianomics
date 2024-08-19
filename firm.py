@@ -5,7 +5,7 @@ import random as rnd
 class Firm:
     firm_id = 0
     
-    def __init__(self, good=None, eco=None, owner=None):
+    def __init__(self, good=None, eco=None, owner=None, starting_balance=1000):
 
         self.good = good
         self.eco = eco
@@ -14,7 +14,8 @@ class Firm:
         self.inventory = {self.good: 1}
         self.open = True
 
-        self.balance = 1000
+        # Firm structure could be 1-2D Array as well
+        self.balance = starting_balance * (1 - self.eco.barriers_to_entry) # // Just a float. Could be KV Pair...
         self.income = 0
         self.markup = 0.2
 
@@ -115,7 +116,7 @@ class Firm:
 
 
     def promote(self, x=1):
-        # Max number of people that can be managed is 12... 
+        # Max number of people that can be managed is 12...
         n_structures = x
         # for i in range(len_structures)
         # have a 0.8, 1.2) management variable

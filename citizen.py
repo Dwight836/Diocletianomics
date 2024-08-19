@@ -15,6 +15,7 @@ class Citizen:
             self.age = set_age
 
         # should be 40% less in cases...
+        # Potentially weight this as a 1-2D Array
         self.productivity = np.random.default_rng().normal(1, 0.25, 1)[0]
         self.workforce = (self.age >= 18)
         self.alive = True
@@ -88,12 +89,12 @@ class Citizen:
                 for child in self.children:
                     child.balance += (estate / len(self.children))
 
-    def promote(self):
+    def promote_citizen(self):
         # Citizens become aristocrats
-        if self.balance >= 1000:
+        if self.balance >= 1000 and self.job != 'nobility':
             self.job = 'nobility'
 
-    def demote(self):
+    def demote_citizen(self):
         # Citizens become unfree...
         if self.balance <= -1000:
             self.job = None

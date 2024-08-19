@@ -19,6 +19,11 @@ class Economy:
         self.workforce = []
         self.aristocrats = []
 
+        # self.barriers_to_entry = {}
+        self.barriers_to_entry = 0
+
+        self.fixed_costs = None
+
         self.markets = []
         # Retirement age should be an eco wide variable...maybe
         # self.retirement_age = 60
@@ -31,11 +36,13 @@ class Economy:
     def introduce_citizens(self, n=1000):
         # Batch introduces n citizens
         for _ in range(n):
-            self.add_citizen(Citizen())
-            a = Aristocrat(eco=self)
-            #print(a.balance)
-            self.add_citizen(a)
+            c = Citizen()
+            self.add_citizen(c)
 
+            # Batching 1% of aristocrats
+            if _ % 100 == 0:
+                a = Aristocrat(eco=self)
+                self.add_citizen(a)
 
     def introduce_goods(self, goods_list):
         # Introduces goods, initializing supply at 0
@@ -141,6 +148,19 @@ class Economy:
         for good in self.goods.keys():
             self.goods[good]['quantity_supplied'] = 0
 
+    def get_barriers(self):
+        # Business owners as proportion of aristocracy
+        business_owners = [aristocrat for aristocrat in self.aristocrats if aristocrat.entrepreneur]
+
+        # This populates the barriers to entry dictionary, starting at 0
+        if len(self.citizens) != 0 and len(self.aristocrats) != 0:
+
+            for good in self.goods.keys():
+                self.barriers_to_entry[good] = 0
+
+
+
+
     def pass_year(self):
         # Population consumes goods, zeroing supply
         self.consume_goods()
@@ -153,6 +173,9 @@ class Economy:
             if baby:
                 self.add_citizen(baby)
 
+        # Passes fiscal years for aristocrats
+        for aristocrat in self.aristocrats:
+            aristocrat.pass_fiscal_year()
 
         # Adjusts citizens and aristocrats
         self.get_citizens()
