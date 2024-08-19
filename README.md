@@ -17,3 +17,5 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Disasters + civil wars
 - Barriers to entry
 - Firm management structure / nested levels
+- 2D array productivity representation
+- Inheritance and learning
