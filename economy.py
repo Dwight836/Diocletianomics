@@ -88,6 +88,8 @@ class Economy:
     def get_aristocrats(self):
         # Updates aristocrat population
         self.aristocrats = [Aristocrat(citizen) for citizen in self.citizens if citizen.job == 'nobility']
+        for aristocrat in self.aristocrats:
+            aristocrat.eco = self
 
     def employ_workers(self):
         # I would eventually like weights to be wages or some measure

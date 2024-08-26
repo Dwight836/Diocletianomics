@@ -1,6 +1,8 @@
 import numpy as np
 import random as rnd
 
+from balance_sheet import BalanceSheet
+
 
 class Firm:
     firm_id = 0
@@ -13,6 +15,9 @@ class Firm:
         self.productivity = rnd.uniform(0.8, 1.2)
         self.inventory = {self.good: 1}
         self.open = True
+
+        self.years_open = 0
+        self.balance_sheet = BalanceSheet()
 
         # Firm structure could be 1-2D Array as well
         self.balance = starting_balance * (1 - self.eco.barriers_to_entry) # // Just a float. Could be KV Pair...
@@ -39,6 +44,15 @@ class Firm:
         self.pay_wages()
 
         self.compete()
+        if self.open:
+            self.years_open += 1
+
+        self.report()
+
+    def report(self):
+        # Sets up balance sheet interface
+        self.balance_sheet.report_year()
+
 
     def produce(self):
         # comment...
