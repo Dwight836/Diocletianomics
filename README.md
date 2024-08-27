@@ -19,3 +19,4 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Firm management structure / nested levels
 - 2D array productivity representation
 - Inheritance and learning
+- Property transference
