@@ -8,7 +8,6 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Random shock events such as invasion, plague, etc.
 - Firm reinvestments in labor vs. capital
 - Simple dashboard for basic stats 
-- Natural firm creation
 - Database supports for simpler viz
 - UML diagram for SQL support...
 - Firm value estimations / cash flows
