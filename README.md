@@ -20,3 +20,6 @@ An economic engine simulation hoping to recreate the structures of the late Roma
 - Inheritance and learning
 - Property transference
 - Utility preference (indifference) curves for consumers
+
+- A New Era
+- Market Interconnectivity and Arbitrage
