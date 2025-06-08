@@ -8,32 +8,32 @@ class Market:
         # This is the name of the mkt
         self.region = region
         self.eco = eco
-
         self.firms = []
         self.prices = {}
+        self.product = 0
+        self.connections = {}
+
+        # Important factor for compounding
+        self.growth_margin = 0.05
 
         Market.market_id += 1
 
-    def set_price(self):
-        # Very simple pricing formula.
-        for good in self.eco.goods:
-            weighed_outputs = []
-            outputs = []
+    def expand_product(self):
+        # Local market booming
+        self.product *= (1 + self.growth_margin)
 
-            for firm in self.firms:
-                if firm.good == good:
-                    weighed_outputs.append(firm.find_cost() * firm.inventory[good])
-                    outputs.append(firm.inventory[good])
+    def contract_product(self):
+        # Local market contracting (surplus)
+        self.product *= (1 - self.growth_margin)
 
-            weighted_avg_price = sum(weighed_outputs) / sum(outputs)
-            self.prices[good] = weighted_avg_price
+    def get_market_prices(self):
+        pass
 
+    def connect(self, other, strength=1):
+        # Creating transportation links with other markets
+        self.connections[other.region] = strength
 
-
-
-
-
-
-
-
+    def trade(self, other):
+        # Conducting trade with linked markets
+        pass
 
