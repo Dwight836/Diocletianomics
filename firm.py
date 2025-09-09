@@ -1,8 +1,6 @@
 import numpy as np
 import random as rnd
 
-from balance_sheet import BalanceSheet
-
 
 class Firm:
     firm_id = 0
@@ -17,7 +15,6 @@ class Firm:
         self.open = True
 
         self.years_open = 0
-        self.balance_sheet = BalanceSheet()
 
         # Firm structure could be 1-2D Array as well
         self.balance = starting_balance * (1 - self.eco.barriers_to_entry) # // Just a float. Could be KV Pair...
@@ -34,7 +31,7 @@ class Firm:
         return f'{self.productivity:.3f}x -- {self.good}_#{self.firm_id} firm, employing {len(self.workers)} workers'
 
     def pass_year(self):
-        # I want to everything into this one method
+        # I want to put everything into this one method
         self.audit_workforce()
         self.set_wages()
         self.produce()
@@ -47,15 +44,9 @@ class Firm:
         if self.open:
             self.years_open += 1
 
-        self.report()
-
-    def report(self):
-        # Sets up balance sheet interface
-        self.balance_sheet.report_year()
-
-
     def produce(self):
         # comment...
+        # This is the production function
         worker_prod = sum([worker.productivity for worker in self.workers])
         output = worker_prod * self.productivity
 
@@ -64,24 +55,49 @@ class Firm:
             if self.good in self.eco.goods.keys():
                 self.eco.goods[self.good]['quantity_supplied'] += output
 
+        # If firm in business,
         if self.good:
             self.inventory[self.good] = output
 
-    def hire_worker(self, worker):
-        # Worker is a citizen object
-        self.workers.append(worker)
-        worker.job = self.good
+    def hire_worker(self, candidate):
+        simple_selection = False
+        complex_selection = not simple_selection
+
+        if simple_selection:
+
+            self.workers.append(candidate)
+            candidate.job = self.good
+
+        if complex_selection:
+            # Worker is a citizen object, modified by relationship with the firm
+            desired_salary = self.get_wage(candidate, report=True)
+            predicted_contrib = self.get_marginal_product(candidate)
+
+            # If non-blacklisted worker can make a positive impact
+            if (desired_salary <= predicted_contrib) and (self.firm_id not in candidate.rejected_companies):
+                self.workers.append(candidate)
+                candidate.job = self.good
+            else:
+                # candidate is rejected and blacklisted
+                candidate.rejected_companies.add(self.firm_id)
 
     def audit_workforce(self):
         # This clears the firm of retired / dead employees
-        self.workers = [worker for worker in self.workers if worker.workforce and worker.alive]
+        self.workers = [worker for worker in self.workers
+                        if worker.workforce and worker.alive]
+
+    def get_wage(self, worker, report=False):
+        # This change is untested. Surely it will be fine.
+        worker.wage = (1 + worker.productivity ** 2)
+        if report:
+            return worker.wage
+
 
     def set_wages(self):
         # Sets a wage for each worker
         for worker in self.workers:
             # Add additional rnd?
-            wage = (1 + worker.productivity**2)
-            worker.wage = wage
+            self.get_wage(worker)
 
     def pay_wages(self):
         # Pays wages
@@ -154,6 +170,18 @@ class Firm:
             self.open = False
             self.eco = None
             self.owner = None
+
+    def get_marginal_product(self, worker):
+        # Gets the predicted marginal product of labor if worker hired...
+        # Worker object -> float
+        output_added = float(worker.productivity * self.productivity)
+        value_added = output_added * self.eco.goods[self.good]['price']
+        return value_added
+
+
+
+
+
 
 
 
